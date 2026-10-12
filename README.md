@@ -1,9 +1,21 @@
-The Great Reveal - Baby Mentor Academy
+# Baby’s Mentor Academy — Live Edition
 
-Open index.html with game-animations.js in the same folder.
-Use Host Control Center > Opening activities to switch between Animal Sound Match, Math Challenge, Rock Paper Scissors, Captain Introduction and Mystery Games. Open a separate projector window.
-Bottle Reach is bonus game 5: enable it in bonus selection, and set team bonus game count to 5 if you want all five.
-This is a browser-local demo; synchronization works within the same browser profile only.
-Safety: bottle challenge requires feet grounded, no lifting or unsafe leaning.
+Node 20+ server with shared host state and auto-updating projector. No npm dependencies.
 
-Pastel edition: warm ivory background, sage/mint, blush, peach, lavender and butter-yellow accents across host and projector. All functionality retained.
+## Railway setup
+Upload these files to the **root** of `githubCoder24/genderRevealApp` on `main`: `index.html`, `game-animations.js`, `server.js`, `package.json`, `Dockerfile`. Railway redeploys automatically.
+
+Set Railway service variable **HOST_PIN** to a long, private secret (at least 8 characters). Do not put the PIN in GitHub. Optional: `DATA_DIR=/data` and mount a Railway persistent volume at `/data` for durable state. Without a volume, Railway restarts or redeploys may lose data.
+
+Links (replace DOMAIN with your Railway domain):
+- Guest QR: `https://DOMAIN/#welcome`
+- Host: `https://DOMAIN/#host` (PIN required)
+- Projector: `https://DOMAIN/#audience` (polls server every 1.5 seconds)
+
+Guests do **not** register on their phones. Host enters their names and checks in / marks paid. Guests see $20 Zelle (845-464-4462) or cash. Payments are manual; the app does not process or verify payments.
+
+## Rehearsal
+Open host and projector on **different devices** to test syncing. Export event JSON regularly. The host PIN protects the editing API; do not show the host dashboard on the projector. Use HTTPS.
+
+## Security and operations
+Use a unique HOST_PIN. Set Railway volume to `/data` before the event. Avoid using `Load 30 demo guests` or `Reset event` on event day. Do not share the PIN or exported JSON. The public audience API intentionally excludes unrevealed gender and secret clue assignments.
