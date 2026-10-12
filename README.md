@@ -1,21 +1,22 @@
-# Baby’s Mentor Academy — Live Edition
+# Baby's Mentor Academy — Points & Proportional Prize Distribution
 
-Node 20+ server with shared host state and auto-updating projector. No npm dependencies.
+Upload **index.html** to the GitHub repository's root on `main`, replacing the existing file. All other files in this package are the existing server and assets, included for completeness.
 
-## Railway setup
-Upload these files to the **root** of `githubCoder24/genderRevealApp` on `main`: `index.html`, `game-animations.js`, `server.js`, `package.json`, `Dockerfile`. Railway redeploys automatically.
+## Scoring
+- Once both math quiz captains are chosen, Team A and Team B each start at 10 points.
+- Rock–Paper–Scissors: winning player earns 5 points for the chosen team; losing player earns 2 points for the opposite team. Host can adjust for future matchups; existing rounds retain their recorded awards.
+- Mystery individual game winner: 10 points. Bonus team game winner: 20 points. Captain double-points power doubles one eligible individual win. Undo restores a used power-up.
+- Points are **not** dollars. The prize pool comes from paid guest fees plus the host contribution.
+- Final bid per team must be a whole number between 0 and its earned score. Correct prediction adds the bid as bonus points; wrong prediction adds 0 and does not deduct anything.
+- Final prize share: pool × team final points ÷ both teams' combined final points. Amounts rounded to cents, with the remainder assigned to Team B so the total equals the pool.
+- Per-player distribution divides each team's payout evenly among members and allocates leftover cents in token order. Host must handle empty teams manually.
 
-Set Railway service variable **HOST_PIN** to a long, private secret (at least 8 characters). Do not put the PIN in GitHub. Optional: `DATA_DIR=/data` and mount a Railway persistent volume at `/data` for durable state. Without a volume, Railway restarts or redeploys may lose data.
+## Deployment and data
+- Persistent Railway event state is preserved by this update.
+- Previous game awards recorded under the earlier money-derived system are not silently rewritten. For an accurate fresh event, reset demo/test data using the existing host controls **after backing it up**. Do not reset real event data inadvertently.
+- Deploy to Railway through the connected GitHub repository. Test with host and audience screens separately.
+- Keep the host PIN secret and rotate it before the event.
 
-Links (replace DOMAIN with your Railway domain):
-- Guest QR: `https://DOMAIN/#welcome`
-- Host: `https://DOMAIN/#host` (PIN required)
-- Projector: `https://DOMAIN/#audience` (polls server every 1.5 seconds)
-
-Guests do **not** register on their phones. Host enters their names and checks in / marks paid. Guests see $20 Zelle (845-464-4462) or cash. Payments are manual; the app does not process or verify payments.
-
-## Rehearsal
-Open host and projector on **different devices** to test syncing. Export event JSON regularly. The host PIN protects the editing API; do not show the host dashboard on the projector. Use HTTPS.
-
-## Security and operations
-Use a unique HOST_PIN. Set Railway volume to `/data` before the event. Avoid using `Load 30 demo guests` or `Reset event` on event day. Do not share the PIN or exported JSON. The public audience API intentionally excludes unrevealed gender and secret clue assignments.
+## Verification
+- Embedded JavaScript checked with `node --check`.
+- Scoring test verifies math captain points, RPS awards, mystery points, correct and incorrect bid bonuses, and prize pool conservation.
