@@ -5,7 +5,7 @@ if(!pin||pin.length<8){console.error('HOST_PIN environment variable must be set 
 const dir=process.env.DATA_DIR||path.join(__dirname,'data');fs.mkdirSync(dir,{recursive:true});const file=path.join(dir,'event.json');
 let state={},version=0;try{const data=JSON.parse(fs.readFileSync(file,'utf8'));state=data.state||{};version=data.version||0}catch{}
 function authorized(req){const a=Buffer.from(req.headers['x-host-pin']||'');const b=Buffer.from(pin);return a.length===b.length&&crypto.timingSafeEqual(a,b)}
-function publicState(){const s=structuredClone(state);if(!s.finalReveal){delete s.gender;delete s.guessA;delete s.guessB;delete s.bidA;delete s.bidB;delete s.bidsLocked;}delete s.clueGuests;delete s.cluesLocked;delete s.assignA;delete s.assignB;delete s.log;delete s.mathWinners;delete s.captains;delete s.guests;return s}
+function publicState(){const s=structuredClone(state);if(!s.finalReveal){delete s.gender;delete s.guessA;delete s.guessB;delete s.bidA;delete s.bidB;delete s.bidsLocked;}delete s.clueGuests;delete s.cluesLocked;delete s.assignA;delete s.assignB;delete s.log;delete s.mathWinners;s.guests=Array.isArray(state.guests)?state.guests.map(g=>({name:String(g.name||''),token:g.token,team:g.team==='A'||g.team==='B'?g.team:''})):[];s.captains=Array.isArray(state.captains)?state.captains.slice(0,2):[];return s}
 function send(res,status,obj){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(obj))}
 const types={'/':'index.html','/index.html':'index.html','/game-animations.js':'game-animations.js'};
 http.createServer((req,res)=>{const url=new URL(req.url,'http://localhost');if(url.pathname==='/api/state'){
